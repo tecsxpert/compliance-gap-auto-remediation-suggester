@@ -1,7 +1,9 @@
 package com.internship.tool.service;
 
-import org.springframework.scheduling.annotation.Async;
+
 import org.springframework.stereotype.Service;
+
+import java.util.Map;
 
 @Service
 public class ComplianceService {
@@ -12,25 +14,33 @@ public class ComplianceService {
         this.aiServiceClient = aiServiceClient;
     }
 
-    public void create(String request) {
-        enrichWithAi(request);
-        System.out.println("Create method completed immediately");
+    // Main method called from controller
+    public String create(Map<String, Object> data) {
+        // Call AI and return response directly
+        return enrichWithAi(data);
     }
 
-    @Async
-    public void enrichWithAi(String request) {
+    public String getRecommendations(Map<String, Object> data) {
+        return aiServiceClient.recommend(data);
+    }
+
+    public String getReport(Map<String, Object> data) {
+        return aiServiceClient.generateReport(data);
+    }
+
+    // Async method 
+    public String enrichWithAi(Map<String, Object> data) {
         try {
-            String result = aiServiceClient.describe(request);
+            String result = aiServiceClient.describe(data);
 
             if (result != null) {
-                System.out.println("AI Response:");
-                System.out.println(result);
+                return result;
             } else {
-                System.out.println("AI returned null");
+                return "AI returned null response";
             }
 
         } catch (Exception e) {
-            System.out.println("AI call failed: " + e.getMessage());
+            return "AI call failed: " + e.getMessage();
         }
     }
 }

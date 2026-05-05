@@ -4,8 +4,13 @@ from routes.describe import describe_bp
 from routes.recommend import recommend_bp
 from routes.report import report_bp
 from routes.health import health_bp
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
+
 
 app = Flask(__name__)
+
+limiter = Limiter(get_remote_address, app=app, default_limits=["30 per minute"])
 # Security Headers
 @app.after_request
 def add_security_headers(response):

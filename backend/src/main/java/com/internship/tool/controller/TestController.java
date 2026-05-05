@@ -1,10 +1,12 @@
 package com.internship.tool.controller;
 
 import com.internship.tool.service.ComplianceService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
+@RequestMapping("/api/compliance")
 public class TestController {
 
     private final ComplianceService complianceService;
@@ -13,9 +15,18 @@ public class TestController {
         this.complianceService = complianceService;
     }
 
-    @GetMapping("/test")
-    public String test() {
-        complianceService.create("Password policy gap");
-        return "Request accepted";
+    @PostMapping("/analyze")
+    public String analyze(@RequestBody Map<String, Object> data) {
+        return complianceService.create(data);
+    }
+
+    @PostMapping("/recommend")
+    public String recommend(@RequestBody Map<String, Object> data) {
+        return complianceService.getRecommendations(data);
+    }
+
+    @PostMapping("/report")
+    public String report(@RequestBody Map<String, Object> data) {
+        return complianceService.getReport(data);
     }
 }
